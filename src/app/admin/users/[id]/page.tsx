@@ -135,19 +135,16 @@ export default function UserFormPage() {
     }
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
+  const handleInputChange = (value: string, fieldName: string) => {
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [fieldName]: value,
     }));
     // Clear validation error when user starts typing
-    if (validation[name]) {
+    if (validation[fieldName]) {
       setValidation((prev) => ({
         ...prev,
-        [name]: "",
+        [fieldName]: "",
       }));
     }
   };
@@ -215,7 +212,7 @@ export default function UserFormPage() {
                     name="name"
                     type="text"
                     value={form.name}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleInputChange(value, "name")}
                     error={validation.name}
                     required
                   />
@@ -225,7 +222,7 @@ export default function UserFormPage() {
                     name="email"
                     type="email"
                     value={form.email}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleInputChange(value, "email")}
                     error={validation.email}
                     required
                   />
@@ -239,7 +236,7 @@ export default function UserFormPage() {
                     name="password"
                     type="password"
                     value={form.password || ""}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleInputChange(value, "password")}
                     error={validation.password}
                     required={isNewUser}
                   />
@@ -248,7 +245,7 @@ export default function UserFormPage() {
                     label="Role"
                     name="role"
                     value={form.role}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleInputChange(value, "role")}
                     options={[
                       { value: "USER", label: "Employee" },
                       { value: "IT", label: "IT Staff" },
@@ -269,7 +266,7 @@ export default function UserFormPage() {
                     name="department"
                     type="text"
                     value={form.department || ""}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleInputChange(value, "department")}
                     placeholder="e.g., Engineering, Marketing"
                   />
 
@@ -278,7 +275,9 @@ export default function UserFormPage() {
                     name="phoneNumber"
                     type="tel"
                     value={form.phoneNumber || ""}
-                    onChange={handleInputChange}
+                    onChange={(value) =>
+                      handleInputChange(value, "phoneNumber")
+                    }
                     placeholder="e.g., +66-XXX-XXX-XXXX"
                   />
 
@@ -287,7 +286,7 @@ export default function UserFormPage() {
                     name="lineId"
                     type="text"
                     value={form.lineId || ""}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleInputChange(value, "lineId")}
                     placeholder="e.g., @username"
                   />
                 </div>
