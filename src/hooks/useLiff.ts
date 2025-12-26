@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
+declare global {
+  interface Window {
+    liff: any;
+  }
+}
+
 export interface LiffContext {
   userId: string;
   displayName: string;
@@ -19,7 +25,6 @@ export function useLiff() {
   useEffect(() => {
     const initLiff = async () => {
       try {
-        // @ts-ignore - LIFF SDK จาก CDN
         if (typeof window !== 'undefined' && window.liff) {
           const liff = window.liff;
           
@@ -66,9 +71,7 @@ export function useLiff() {
 }
 
 export function closeLiff() {
-  // @ts-ignore
   if (typeof window !== 'undefined' && window.liff) {
-    // @ts-ignore
     window.liff.closeWindow();
   }
 }
