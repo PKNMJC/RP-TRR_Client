@@ -35,11 +35,17 @@ function LineOALinkContent() {
     setLinkStatus("linking");
 
     try {
-      // เชื่อมต่อบัญชี LINE กับระบบ
+      // สร้าง user ID ใหม่ ถ้าไม่มี
+      const newUserId = userId || `line_${lineId.substring(0, 10)}`;
+
+      // ทำการเชื่อมต่อ LINE กับระบบ
       const response = await apiFetch("/api/line-oa/linking/verify", {
         method: "POST",
         body: JSON.stringify({
-          userId: parseInt(userId || "1"),
+          userId:
+            typeof newUserId === "string"
+              ? parseInt(newUserId.substring(5)) || 1
+              : newUserId,
           lineUserId: lineId,
           verificationToken: Math.random().toString(36).substring(7),
         }),
@@ -47,13 +53,20 @@ function LineOALinkContent() {
 
       if (response.success || response.isLinked) {
         setLinkStatus("success");
+
+        // รอ 2 วินาที แล้วปิด LIFF window
         setTimeout(() => {
           if (typeof window !== "undefined" && window.liff) {
             window.liff.closeWindow();
           } else {
-            router.push("/");
+            // ถ้าไม่ใช่ LIFF ให้กลับไปหน้า LINE chat
+            window.location.href = "https://line.me/";
           }
         }, 2000);
+      } else {
+        setLinkStatus("error");
+        setLinkError(response.message || "เกิดข้อผิดพลาดในการเชื่อมต่อ");
+        setIsLinking(false);
       }
     } catch (err) {
       setLinkStatus("error");
@@ -65,10 +78,10 @@ function LineOALinkContent() {
   };
 
   useEffect(() => {
-    if (liffContext && !isLinking) {
+    if (liffContext && !isLinking && linkStatus === "idle") {
       handleLinkAccount();
     }
-  }, [liffContext]);
+  }, [liffContext, isLinking, linkStatus]);
 
   if (isLoading) {
     return (
