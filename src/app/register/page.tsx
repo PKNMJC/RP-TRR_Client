@@ -178,7 +178,7 @@ export default function Register() {
             <InputField
               label="ชื่อเต็ม"
               type="text"
-              placeholder="John Doe"
+              placeholder=""
               value={formData.name}
               onChange={(value) => handleInputChange('name', value)}
               error={errors.name}
@@ -188,7 +188,7 @@ export default function Register() {
             <InputField
               label="อีเมล"
               type="email"
-              placeholder="your@email.com"
+              placeholder=""
               value={formData.email}
               onChange={(value) => handleInputChange('email', value)}
               error={errors.email}
@@ -198,7 +198,7 @@ export default function Register() {
             <InputField
               label="แผนก"
               type="text"
-              placeholder="เช่น ฝ่าย IT"
+              placeholder=""
               value={formData.department}
               onChange={(value) => handleInputChange('department', value)}
               error={errors.department}
@@ -208,7 +208,7 @@ export default function Register() {
             <InputField
               label="เบอร์โทรศัพท์"
               type="tel"
-              placeholder="เช่น 0812345678"
+              placeholder=""
               value={formData.phoneNumber}
               onChange={(value) => handleInputChange('phoneNumber', value)}
               error={errors.phoneNumber}
@@ -218,7 +218,7 @@ export default function Register() {
             <InputField
               label="Line ID"
               type="text"
-              placeholder="เช่น user123456"
+              placeholder=""
               value={formData.lineId}
               onChange={(value) => handleInputChange('lineId', value)}
               error={errors.lineId}
@@ -229,7 +229,7 @@ export default function Register() {
               <InputField
                 label="รหัสผ่าน"
                 type="password"
-                placeholder="••••••••"
+                placeholder=""
                 value={formData.password}
                 onChange={(value) => handleInputChange('password', value)}
                 error={errors.password}
@@ -262,7 +262,7 @@ export default function Register() {
             <InputField
               label="ยืนยันรหัสผ่าน"
               type="password"
-              placeholder="••••••••"
+              placeholder=""
               value={formData.confirmPassword}
               onChange={(value) => handleInputChange('confirmPassword', value)}
               error={errors.confirmPassword}
@@ -326,7 +326,7 @@ export default function Register() {
 
         {/* Footer */}
         <p className="text-center text-gray-500 text-sm mt-8">
-          © 2025 Ticket Resolver System. All rights reserved.
+          © 2025  .
         </p>
       </div>
     </div>
