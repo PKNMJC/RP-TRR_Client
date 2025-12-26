@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 interface Ticket {
@@ -19,7 +19,7 @@ interface Ticket {
   };
 }
 
-export default function RepairStatusCheck() {
+function RepairStatusCheckContent() {
   const searchParams = useSearchParams();
   const lineId = searchParams.get("lineId") || "";
 
@@ -259,5 +259,13 @@ export default function RepairStatusCheck() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RepairStatusCheck() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RepairStatusCheckContent />
+    </Suspense>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function RepairRequestForm() {
+function RepairRequestFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const lineId = searchParams.get("lineId") || "";
@@ -331,5 +331,13 @@ export default function RepairRequestForm() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RepairRequestForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RepairRequestFormContent />
+    </Suspense>
   );
 }

@@ -35,6 +35,7 @@ interface Loan {
   quantity: number;
   borrowDate: string;
   expectedReturnDate: string;
+  returnDate?: string;
   status: LoanStatus;
   borrowerName: string;
   borrowerDepartment: string;
@@ -600,7 +601,7 @@ export default function ITLoansPage() {
                       label="ชื่ออุปกรณ์"
                       required
                       value={formData.itemName}
-                      onChange={(v) =>
+                      onChange={(v: string) =>
                         setFormData({ ...formData, itemName: v })
                       }
                       placeholder="เช่น MacBook Pro 16"
@@ -608,7 +609,7 @@ export default function ITLoansPage() {
                     <FormTextArea
                       label="รายละเอียด/Serial No."
                       value={formData.description}
-                      onChange={(v) =>
+                      onChange={(v: string) =>
                         setFormData({ ...formData, description: v })
                       }
                       placeholder="ระบุเลข Serial หรือตำหนิ"
@@ -618,7 +619,7 @@ export default function ITLoansPage() {
                         label="จำนวน"
                         type="number"
                         value={formData.quantity.toString()}
-                        onChange={(v) =>
+                        onChange={(v: string) =>
                           setFormData({
                             ...formData,
                             quantity: parseInt(v) || 1,
@@ -630,7 +631,7 @@ export default function ITLoansPage() {
                         type="date"
                         required
                         value={formData.expectedReturnDate}
-                        onChange={(v) =>
+                        onChange={(v: string) =>
                           setFormData({ ...formData, expectedReturnDate: v })
                         }
                       />
@@ -648,7 +649,7 @@ export default function ITLoansPage() {
                       label="ชื่อ-นามสกุล"
                       required
                       value={formData.borrowerName}
-                      onChange={(v) =>
+                      onChange={(v: string) =>
                         setFormData({ ...formData, borrowerName: v })
                       }
                       placeholder="ชื่อพนักงาน"
@@ -656,7 +657,7 @@ export default function ITLoansPage() {
                     <FormInput
                       label="แผนก"
                       value={formData.borrowerDepartment}
-                      onChange={(v) =>
+                      onChange={(v: string) =>
                         setFormData({ ...formData, borrowerDepartment: v })
                       }
                       placeholder="IT, Marketing, etc."
@@ -665,7 +666,7 @@ export default function ITLoansPage() {
                       label="เบอร์โทรศัพท์"
                       icon={<Phone size={14} />}
                       value={formData.borrowerPhone}
-                      onChange={(v) =>
+                      onChange={(v: string) =>
                         setFormData({ ...formData, borrowerPhone: v })
                       }
                       placeholder="08x-xxx-xxxx"
@@ -673,7 +674,7 @@ export default function ITLoansPage() {
                     <FormInput
                       label="Line ID"
                       value={formData.borrowerLineId}
-                      onChange={(v) =>
+                      onChange={(v: string) =>
                         setFormData({ ...formData, borrowerLineId: v })
                       }
                       placeholder="@username"
