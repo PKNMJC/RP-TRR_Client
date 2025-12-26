@@ -1,36 +1,53 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent } from "react";
 
 interface FileUploadProps {
-  label: string;
-  onChange: (files: File[]) => void;
+  label?: string;
+  onChange?: (files: File[]) => void;
+  onFilesSelected?: (files: File[]) => void;
   multiple?: boolean;
   accept?: string;
   maxSize?: number; // in MB
+  maxSizeMB?: number; // in MB (alternative prop name)
+  maxFiles?: number;
   required?: boolean;
 }
 
 export default function FileUpload({
-  label,
+  label = "Upload Files",
   onChange,
+  onFilesSelected,
   multiple = true,
-  accept = '.pdf,.jpg,.jpeg,.png,.doc,.docx',
+  accept = ".pdf,.jpg,.jpeg,.png,.doc,.docx",
   maxSize = 10,
+  maxSizeMB = 10,
+  maxFiles,
   required = false,
 }: FileUploadProps) {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    
+    let files = Array.from(e.target.files || []);
+    const maxSizeValue = maxSizeMB || maxSize;
+
+    // Validate number of files
+    if (maxFiles && files.length > maxFiles) {
+      alert(`สามารถอัปโหลดได้ไม่เกิน ${maxFiles} ไฟล์`);
+      files = files.slice(0, maxFiles);
+    }
+
     // Validate file size
     const validFiles = files.filter((file) => {
       const fileSizeInMB = file.size / (1024 * 1024);
-      if (fileSizeInMB > maxSize) {
-        alert(`ไฟล์ ${file.name} มีขนาดใหญ่เกินไป (สูงสุด ${maxSize}MB)`);
+      if (fileSizeInMB > maxSizeValue) {
+        alert(`ไฟล์ ${file.name} มีขนาดใหญ่เกินไป (สูงสุด ${maxSizeValue}MB)`);
         return false;
       }
       return true;
     });
 
-    onChange(validFiles);
+    if (onFilesSelected) {
+      onFilesSelected(validFiles);
+    } else if (onChange) {
+      onChange(validFiles);
+    }
   };
 
   return (

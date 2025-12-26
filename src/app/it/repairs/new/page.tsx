@@ -114,22 +114,17 @@ export default function CreateTicketPage() {
     return Object.keys(errors).length === 0;
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
+  const handleInputChange = (value: string, fieldName: string) => {
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [fieldName]: value,
     }));
 
     // Clear validation error when user starts typing
-    if (validation[name]) {
+    if (validation[fieldName]) {
       setValidation((prev) => ({
         ...prev,
-        [name]: "",
+        [fieldName]: "",
       }));
     }
   };
@@ -230,11 +225,10 @@ export default function CreateTicketPage() {
                 <div className="space-y-4">
                   <InputField
                     label="Title"
-                    name="title"
                     type="text"
                     placeholder="Brief description of the issue"
                     value={form.title}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleInputChange(value, "title")}
                     error={validation.title}
                     required
                   />
@@ -244,10 +238,11 @@ export default function CreateTicketPage() {
                       Description <span className="text-red-500">*</span>
                     </label>
                     <textarea
-                      name="description"
                       placeholder="Detailed description of the problem"
                       value={form.description}
-                      onChange={handleInputChange}
+                      onChange={(e) =>
+                        handleInputChange(e.target.value, "description")
+                      }
                       rows={5}
                       className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         validation.description
@@ -272,22 +267,22 @@ export default function CreateTicketPage() {
                 <div className="space-y-4">
                   <InputField
                     label="Equipment Name"
-                    name="equipmentName"
                     type="text"
                     placeholder="e.g., Computer, Printer, Phone"
                     value={form.equipmentName}
-                    onChange={handleInputChange}
+                    onChange={(value) =>
+                      handleInputChange(value, "equipmentName")
+                    }
                     error={validation.equipmentName}
                     required
                   />
 
                   <InputField
                     label="Location"
-                    name="location"
                     type="text"
                     placeholder="e.g., Office Room 201"
                     value={form.location}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleInputChange(value, "location")}
                     error={validation.location}
                     required
                   />
@@ -302,25 +297,26 @@ export default function CreateTicketPage() {
                 <div className="space-y-4">
                   <SelectField
                     label="Category"
-                    name="problemCategory"
                     value={form.problemCategory}
-                    onChange={handleInputChange}
+                    onChange={(value) =>
+                      handleInputChange(value, "problemCategory")
+                    }
                     options={PROBLEM_CATEGORIES}
                   />
 
                   <SelectField
                     label="Subcategory"
-                    name="problemSubcategory"
                     value={form.problemSubcategory}
-                    onChange={handleInputChange}
+                    onChange={(value) =>
+                      handleInputChange(value, "problemSubcategory")
+                    }
                     options={subcategoryOptions}
                   />
 
                   <SelectField
                     label="Priority"
-                    name="priority"
                     value={form.priority}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleInputChange(value, "priority")}
                     options={[
                       { value: "LOW", label: "Low" },
                       { value: "MEDIUM", label: "Medium" },

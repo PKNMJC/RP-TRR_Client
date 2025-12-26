@@ -209,7 +209,6 @@ export default function UserFormPage() {
                 <div className="space-y-4">
                   <InputField
                     label="Full Name"
-                    name="name"
                     type="text"
                     value={form.name}
                     onChange={(value) => handleInputChange(value, "name")}
@@ -219,7 +218,6 @@ export default function UserFormPage() {
 
                   <InputField
                     label="Email"
-                    name="email"
                     type="email"
                     value={form.email}
                     onChange={(value) => handleInputChange(value, "email")}
@@ -233,7 +231,6 @@ export default function UserFormPage() {
                         ? "Password"
                         : "Password (leave empty to keep current)"
                     }
-                    name="password"
                     type="password"
                     value={form.password || ""}
                     onChange={(value) => handleInputChange(value, "password")}
@@ -243,7 +240,6 @@ export default function UserFormPage() {
 
                   <SelectField
                     label="Role"
-                    name="role"
                     value={form.role}
                     onChange={(value) => handleInputChange(value, "role")}
                     options={[
@@ -263,7 +259,6 @@ export default function UserFormPage() {
                 <div className="space-y-4">
                   <InputField
                     label="Department"
-                    name="department"
                     type="text"
                     value={form.department || ""}
                     onChange={(value) => handleInputChange(value, "department")}
@@ -272,7 +267,6 @@ export default function UserFormPage() {
 
                   <InputField
                     label="Phone Number"
-                    name="phoneNumber"
                     type="tel"
                     value={form.phoneNumber || ""}
                     onChange={(value) =>
@@ -283,7 +277,6 @@ export default function UserFormPage() {
 
                   <InputField
                     label="LINE ID"
-                    name="lineId"
                     type="text"
                     value={form.lineId || ""}
                     onChange={(value) => handleInputChange(value, "lineId")}
