@@ -326,7 +326,7 @@ export default function Register() {
 
         {/* Footer */}
         <p className="text-center text-gray-500 text-sm mt-8">
-          © 2025  .
+          © 2025  . Create By 
         </p>
       </div>
     </div>

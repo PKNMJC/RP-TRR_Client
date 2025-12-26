@@ -92,3 +92,169 @@ export async function apiFetch(url: string, options?: string | FetchOptions | "G
   console.log(`[apiFetch] Text response:`, result);
   return result;
 }
+
+// API Client class for making requests
+interface RequestConfig {
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  headers?: Record<string, string>;
+  data?: any;
+  params?: Record<string, any>;
+}
+
+class APIClient {
+  private baseURL: string;
+
+  constructor(baseURL: string = API_URL) {
+    this.baseURL = baseURL;
+  }
+
+  private getAuthToken(): string | null {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("token");
+    }
+    return null;
+  }
+
+  private getHeaders(config?: RequestConfig): Record<string, string> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...config?.headers,
+    };
+
+    const token = this.getAuthToken();
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    return headers;
+  }
+
+  private buildURL(url: string, params?: Record<string, any>): string {
+    let fullURL = this.baseURL + url;
+
+    if (params) {
+      const queryString = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          queryString.append(key, String(value));
+        }
+      });
+
+      const queryStr = queryString.toString();
+      if (queryStr) {
+        fullURL += `?${queryStr}`;
+      }
+    }
+
+    return fullURL;
+  }
+
+  async request<T = any>(
+    url: string,
+    config?: RequestConfig
+  ): Promise<T> {
+    const method = config?.method || "GET";
+    const fullURL = this.buildURL(url, config?.params);
+    const headers = this.getHeaders(config);
+
+    const options: RequestInit = {
+      method,
+      headers,
+    };
+
+    if (config?.data && (method === "POST" || method === "PUT" || method === "PATCH")) {
+      // Handle FormData (for file uploads)
+      if (config.data instanceof FormData) {
+        delete headers["Content-Type"];
+        options.body = config.data;
+      } else {
+        options.body = JSON.stringify(config.data);
+      }
+    }
+
+    try {
+      const response = await fetch(fullURL, options);
+
+      if (!response.ok) {
+        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        let errorData: any = null;
+
+        try {
+          errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          // Response is not JSON
+        }
+
+        const error: any = new Error(errorMessage);
+        error.status = response.status;
+        error.data = errorData;
+        throw error;
+      }
+
+      // Handle empty responses
+      const contentLength = response.headers.get("content-length");
+      if (contentLength === "0" || response.status === 204) {
+        return {} as T;
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      console.error(`[API Error] ${method} ${url}:`, error);
+      throw error;
+    }
+  }
+
+  async get<T = any>(url: string, config?: Omit<RequestConfig, "data" | "method">): Promise<T> {
+    return this.request<T>(url, {
+      ...config,
+      method: "GET",
+    });
+  }
+
+  async post<T = any>(
+    url: string,
+    data?: any,
+    config?: Omit<RequestConfig, "data" | "method">
+  ): Promise<T> {
+    return this.request<T>(url, {
+      ...config,
+      method: "POST",
+      data,
+    });
+  }
+
+  async put<T = any>(
+    url: string,
+    data?: any,
+    config?: Omit<RequestConfig, "data" | "method">
+  ): Promise<T> {
+    return this.request<T>(url, {
+      ...config,
+      method: "PUT",
+      data,
+    });
+  }
+
+  async patch<T = any>(
+    url: string,
+    data?: any,
+    config?: Omit<RequestConfig, "data" | "method">
+  ): Promise<T> {
+    return this.request<T>(url, {
+      ...config,
+      method: "PATCH",
+      data,
+    });
+  }
+
+  async delete<T = any>(url: string, config?: Omit<RequestConfig, "data" | "method">): Promise<T> {
+    return this.request<T>(url, {
+      ...config,
+      method: "DELETE",
+    });
+  }
+}
+
+export const apiClient = new APIClient(API_URL);

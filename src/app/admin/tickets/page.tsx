@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { apiClient } from "@/services/api";
 
 interface Ticket {
   id: number;
@@ -20,7 +21,7 @@ interface Ticket {
 }
 
 export default function TicketManagement() {
-  const { user } = useAuth() as any;
+  const { role, isLoading } = useAuth() as any;
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("ALL");
@@ -37,16 +38,8 @@ export default function TicketManagement() {
   const fetchTickets = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/tickets", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setTickets(data);
-      }
+      const data = await apiClient.get<Ticket[]>("/api/tickets");
+      setTickets(data);
     } catch (error) {
       console.error("Failed to fetch tickets:", error);
     } finally {
@@ -58,24 +51,14 @@ export default function TicketManagement() {
     if (!selectedTicket || !newStatus) return;
 
     try {
-      const response = await fetch(`/api/tickets/${selectedTicket.id}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          status: newStatus,
-          comment,
-        }),
+      await apiClient.put(`/api/tickets/${selectedTicket.id}/status`, {
+        status: newStatus,
+        comment,
       });
-
-      if (response.ok) {
-        setShowStatusModal(false);
-        setNewStatus("");
-        setComment("");
-        fetchTickets();
-      }
+      setShowStatusModal(false);
+      setNewStatus("");
+      setComment("");
+      fetchTickets();
     } catch (error) {
       console.error("Failed to update status:", error);
     }
@@ -109,7 +92,11 @@ export default function TicketManagement() {
     return colors[priority] || "bg-gray-100 text-gray-800";
   };
 
-  if (!user || (user.role !== "ADMIN" && user.role !== "IT")) {
+  if (isLoading) {
+    return <div className="p-8 text-center">Loading...</div>;
+  }
+
+  if (role !== "ADMIN" && role !== "IT") {
     return <div className="p-8 text-center text-red-600">Access Denied</div>;
   }
 
