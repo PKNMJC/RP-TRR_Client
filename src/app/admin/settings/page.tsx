@@ -138,7 +138,7 @@ export default function AdminSettingsPage() {
                       label="หมดเวลาเซสชัน (นาที)"
                       type="number"
                       value={settings.sessionTimeout}
-                      onChange={(val) =>
+                      onChange={(val: string) =>
                         handleChange("sessionTimeout", parseInt(val))
                       }
                     />
@@ -151,7 +151,9 @@ export default function AdminSettingsPage() {
                     title="โหมดบำรุงรักษา"
                     description="ปิดการเข้าถึงระบบชั่วคราวสำหรับผู้ใช้ทั่วไป"
                     checked={settings.maintenanceMode}
-                    onChange={(val) => handleChange("maintenanceMode", val)}
+                    onChange={(val: boolean) =>
+                      handleChange("maintenanceMode", val)
+                    }
                     warning={
                       settings.maintenanceMode
                         ? "ระบบกำลังอยู่ในโหมดบำรุงรักษา"
@@ -172,7 +174,7 @@ export default function AdminSettingsPage() {
                       title="อีเมล"
                       description="ส่งการแจ้งเตือนงานใหม่ผ่านทางอีเมล"
                       checked={settings.emailNotifications}
-                      onChange={(val) =>
+                      onChange={(val: boolean) =>
                         handleChange("emailNotifications", val)
                       }
                     />
@@ -180,7 +182,9 @@ export default function AdminSettingsPage() {
                       title="SMS"
                       description="ส่งรหัสยืนยันและประกาศด่วนผ่าน SMS"
                       checked={settings.smsNotifications}
-                      onChange={(val) => handleChange("smsNotifications", val)}
+                      onChange={(val: boolean) =>
+                        handleChange("smsNotifications", val)
+                      }
                     />
                   </div>
                 </section>
